@@ -1,10 +1,11 @@
-import 'package:caixinha_troia/database/datanbase.dart';
+import 'package:caixinha_troia/feature_sign/repository/sign_repository.dart';
 import 'package:caixinha_troia/model/user.dart';
 import 'package:caixinha_troia/utils/extensions.dart';
 import 'package:caixinha_troia/utils/pair.dart';
 import 'package:flutter/material.dart';
 
 class ViewModelSignUp {
+  final repository = SignRepository();
   final ValueNotifier<bool> loading = ValueNotifier(false);
   final emailController = TextEditingController();
   final nameController = TextEditingController();
@@ -38,8 +39,8 @@ class ViewModelSignUp {
   Future<Pair<bool, String>> signUp() async {
     final email = emailController.text.trim().toLowerCase();
     final name = nameController.text.trim();
-    final pass = passwordController.text.trim();
-    final confrimPass = confirmPasswordController.text.trim();
+    final pass = passwordController.text;
+    final confrimPass = confirmPasswordController.text;
 
     final result = validadeData(email, name, pass, confrimPass);
 
@@ -50,7 +51,7 @@ class ViewModelSignUp {
     setLoading(true);
 
     User user = createUser(name, email, pass);
-    return Database().registerUser(user);
+    return repository.registerUser(user);
   }
 
   User createUser(String name, String email, String pass) {

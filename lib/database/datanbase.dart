@@ -15,25 +15,26 @@ class Database {
     instance = FirebaseDatabase.instance;
   }
 
-  Future<Pair<bool, String>> registerUser(User user) async {
-    var u = await getUser(user.email);
-    if (u == null) {
-      await insertUser(user);
-      return Pair(true, "Usuário cadastrado com sucesso!!");
-    }
-    return Pair(false, "Email já cadastrado!!");
+  Future<bool> routeExists(String route) async {
+    DatabaseReference ref = instance.ref(route);
+    return (await ref.get()).exists;
   }
 
   Future<void> insertUser(User user) async {
     DatabaseReference ref = instance.ref("user");
-    await ref.child(user.email.removeInvalidChars()).set(user.toMap());
+    await ref.child(user.email.clear()).set(user.toMap());
   }
 
   Future<User?> getUser(String email) async {
     DatabaseReference ref = instance.ref("user");
-    var snapshot = await ref.child(email.removeInvalidChars()).get();
+    var snapshot = await ref.child(email.clear()).get();
     return snapshot.exists
         ? User.fromMap(snapshot.value as Map<Object?, Object?>)
         : null;
+  }
+
+  Future<Object?> getAtomic(String route) async {
+    DatabaseReference ref = instance.ref(route);
+    return (await ref.get()).value;
   }
 }

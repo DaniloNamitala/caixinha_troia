@@ -3,7 +3,7 @@ import 'package:crypto/crypto.dart';
 
 extension StringClear on String {
   // remove '.', '#', '$', '[', or ']'
-  String removeInvalidChars() {
+  String clear() {
     return replaceAll(RegExp("\\."), "(dot)")
         .replaceAll(RegExp("#"), "(hash)")
         .replaceAll(RegExp("\\\$"), "(dol)")
@@ -11,7 +11,7 @@ extension StringClear on String {
         .replaceAll(RegExp("\\]"), "(rb)");
   }
 
-  String restoreInvalidChars() {
+  String restore() {
     return replaceAll(RegExp("(dot)"), ".")
         .replaceAll(RegExp("(hash)"), "#")
         .replaceAll(RegExp("(dol)"), "\\\$")

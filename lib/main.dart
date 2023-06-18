@@ -1,3 +1,4 @@
+import 'package:caixinha_troia/database/preferences.dart';
 import 'package:caixinha_troia/feature_home/screens/home_screen.dart';
 import 'package:caixinha_troia/feature_sign/screens/landing_screen.dart';
 import 'package:caixinha_troia/feature_sign/screens/login_screen.dart';
@@ -9,6 +10,7 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Preferences().init();
   runApp(const MyApp());
 }
 

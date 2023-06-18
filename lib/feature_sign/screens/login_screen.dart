@@ -1,9 +1,29 @@
 import 'package:caixinha_troia/feature_sign/screens/signup_screen.dart';
+import 'package:caixinha_troia/feature_sign/viewmodel/login_viewmodel.dart';
 import 'package:caixinha_troia/style/colors.dart';
+import 'package:caixinha_troia/utils/dialog.dart';
+import 'package:caixinha_troia/utils/pair.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final ViewModelLogin viewModel = ViewModelLogin();
+
+  void handleLoginResult(Pair<bool, String> result) {
+    if (result.first) {
+      viewModel.loading.value = false;
+      viewModel.rememberLoginIfNeed();
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      createDialog(context, "ERRO", result.second);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,24 +43,54 @@ class LoginScreen extends StatelessWidget {
                 scale: 0.7,
               ),
               const Spacer(flex: 1),
-              const TextField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
+              TextField(
+                  controller: viewModel.emailController,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: const InputDecoration(
                       labelStyle: TextStyle(color: Colors.white),
                       border: OutlineInputBorder(),
                       enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white)),
                       labelText: 'Email')),
               const Padding(padding: EdgeInsets.all(10.0)),
-              const TextField(
-                  obscureText: true,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: OutlineInputBorder(),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      labelText: 'Senha')),
+              ListenableBuilder(
+                listenable: viewModel.hidePassword,
+                builder: (context, widget) => TextField(
+                    obscureText: viewModel.hidePassword.value,
+                    controller: viewModel.passwordController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                        labelStyle: const TextStyle(color: Colors.white),
+                        border: const OutlineInputBorder(),
+                        enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white)),
+                        labelText: 'Senha',
+                        suffixIcon: IconButton(
+                          color: Colors.white,
+                          onPressed: () {
+                            viewModel.hidePassword.value =
+                                !viewModel.hidePassword.value;
+                          },
+                          icon: Icon(viewModel.hidePassword.value
+                              ? Icons.visibility_off
+                              : Icons.visibility),
+                        ))),
+              ),
+              Row(
+                children: [
+                  ListenableBuilder(
+                      listenable: viewModel.saveLogin,
+                      builder: (context, child) => Checkbox(
+                          value: viewModel.saveLogin.value,
+                          onChanged: (value) {
+                            viewModel.saveLogin.value = value == true;
+                          })),
+                  const Text(
+                    "Me mantenha conectado",
+                    style: TextStyle(color: Colors.white),
+                  )
+                ],
+              ),
               const Spacer(flex: 4),
               TextButton(
                   onPressed: () => {
@@ -58,8 +108,9 @@ class LoginScreen extends StatelessWidget {
                 style: const ButtonStyle(
                     minimumSize:
                         MaterialStatePropertyAll(Size.fromHeight(50.0))),
-                onPressed: () =>
-                    {Navigator.pushReplacementNamed(context, '/home')},
+                onPressed: () {
+                  viewModel.login().then((value) => handleLoginResult(value));
+                },
                 child: const Text("Entrar"),
               )
             ]),

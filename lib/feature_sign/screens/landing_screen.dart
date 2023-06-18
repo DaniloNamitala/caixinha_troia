@@ -1,3 +1,4 @@
+import 'package:caixinha_troia/feature_sign/viewmodel/login_viewmodel.dart';
 import 'package:caixinha_troia/style/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -9,22 +10,26 @@ class LandingScreen extends StatefulWidget {
 }
 
 class LandingState extends State<LandingScreen> {
+  final ViewModelLogin viewModel = ViewModelLogin();
+
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      checkLastSession(false);
+      checkLastSession();
     });
   }
 
-  void checkLastSession(bool logged) {
-    if (logged) {
-      Navigator.pushNamedAndRemoveUntil(
-          context, '/home', ModalRoute.withName('/login'));
-    } else {
-      Navigator.pushNamedAndRemoveUntil(
-          context, '/login', ModalRoute.withName('/home'));
-    }
+  void checkLastSession() {
+    viewModel.loadLogin().then((value) {
+      if (value.first) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/home', ModalRoute.withName('/login'));
+      } else {
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/login', ModalRoute.withName('/home'));
+      }
+    });
   }
 
   @override
