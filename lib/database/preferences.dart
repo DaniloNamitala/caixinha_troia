@@ -21,6 +21,11 @@ class Preferences {
     await preference.setString(_passwordkey, password);
   }
 
+  Future<void> removeLogin() async {
+    await preference.remove(_emailKey);
+    await preference.remove(_passwordkey);
+  }
+
   Pair<String?, String?> getLogin() {
     final email = preference.getString(_emailKey);
     final password = preference.getString(_passwordkey);

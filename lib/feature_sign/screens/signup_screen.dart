@@ -71,27 +71,54 @@ class SignUpScreenState extends State<SignUpScreen> {
                               borderSide: BorderSide(color: Colors.white)),
                           labelText: 'Email')),
                   const Padding(padding: EdgeInsets.all(10.0)),
-                  TextField(
-                      controller: viewModel.passwordController,
-                      obscureText: true,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                          labelStyle: TextStyle(color: Colors.white),
-                          border: OutlineInputBorder(),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white)),
-                          labelText: 'Senha')),
+                  ListenableBuilder(
+                      listenable: viewModel.hidePassword,
+                      builder: (context, widget) => TextField(
+                            controller: viewModel.passwordController,
+                            obscureText: viewModel.hidePassword.value,
+                            style: const TextStyle(color: Colors.white),
+                            decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  color: Colors.white,
+                                  onPressed: () {
+                                    viewModel.hidePassword.value =
+                                        !viewModel.hidePassword.value;
+                                  },
+                                  icon: Icon(viewModel.hidePassword.value
+                                      ? Icons.visibility_off
+                                      : Icons.visibility),
+                                ),
+                                labelStyle:
+                                    const TextStyle(color: Colors.white),
+                                border: const OutlineInputBorder(),
+                                enabledBorder: const OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.white)),
+                                labelText: 'Senha'),
+                          )),
                   const Padding(padding: EdgeInsets.all(10.0)),
-                  TextField(
-                      controller: viewModel.confirmPasswordController,
-                      obscureText: true,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                          labelStyle: TextStyle(color: Colors.white),
-                          border: OutlineInputBorder(),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white)),
-                          labelText: 'Confirmarção da Senha')),
+                  ListenableBuilder(
+                      listenable: viewModel.hideConfirmation,
+                      builder: (context, widget) => TextField(
+                          controller: viewModel.confirmPasswordController,
+                          obscureText: viewModel.hideConfirmation.value,
+                          style: const TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                color: Colors.white,
+                                onPressed: () {
+                                  viewModel.hideConfirmation.value =
+                                      !viewModel.hideConfirmation.value;
+                                },
+                                icon: Icon(viewModel.hideConfirmation.value
+                                    ? Icons.visibility_off
+                                    : Icons.visibility),
+                              ),
+                              labelStyle: const TextStyle(color: Colors.white),
+                              border: const OutlineInputBorder(),
+                              enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white)),
+                              labelText: 'Confirmarção da Senha'))),
                   const Spacer(),
                   ElevatedButton(
                     style: const ButtonStyle(

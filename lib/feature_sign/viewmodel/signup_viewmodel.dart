@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 class ViewModelSignUp {
   final repository = SignRepository();
   final ValueNotifier<bool> loading = ValueNotifier(false);
+  final ValueNotifier<bool> hidePassword = ValueNotifier(true);
+  final ValueNotifier<bool> hideConfirmation = ValueNotifier(true);
   final emailController = TextEditingController();
   final nameController = TextEditingController();
   final passwordController = TextEditingController();
