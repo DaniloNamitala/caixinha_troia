@@ -1,7 +1,5 @@
-import 'package:caixinha_troia/database/datanbase.dart';
-import 'package:caixinha_troia/model/user.dart';
+import 'package:caixinha_troia/feature_sign/viewmodel/signup_viewmodel.dart';
 import 'package:caixinha_troia/style/colors.dart';
-import 'package:caixinha_troia/utils/extensions.dart';
 import 'package:caixinha_troia/utils/pair.dart';
 import 'package:flutter/material.dart';
 
@@ -13,58 +11,15 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class SignUpScreenState extends State<SignUpScreen> {
-  var loading = false;
-  var emailController = TextEditingController();
-  var nameController = TextEditingController();
-  var passwordController = TextEditingController();
-  var confirmPasswordController = TextEditingController();
-
-  void setLoading(bool enable) => setState(() {
-        loading = enable;
-      });
+  final ViewModelSignUp viewModel = ViewModelSignUp();
 
   void handleRegisterResult(Pair<bool, String> result) {
     if (result.first) {
       Navigator.pop(context);
     } else {
-      setLoading(false);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(result.second),
-      ));
-    }
-  }
-
-  Pair<bool, String> validadeData(
-      String email, String name, String pass, String confirmation) {
-    if (name.isEmpty) {
-      return Pair(false, "Nome não pode ser vazio!!");
-    } else if (email.invalidEmail()) {
-      return Pair(false, "Email inválido ou não institucional!!");
-    } else if (pass != confirmation || pass.isEmpty || confirmation.isEmpty) {
-      return Pair(false, "Senhas inválidas ou diferentes!!");
-    }
-    return Pair(true, "");
-  }
-
-  void signUp() {
-    final email = emailController.text.trim();
-    final name = nameController.text.trim();
-    final pass = passwordController.text.trim();
-    final confrimPass = confirmPasswordController.text.trim();
-
-    final result = validadeData(email, name, pass, confrimPass);
-
-    if (!result.first) {
+      viewModel.setLoading(false);
       createDialog("ERRO", result.second);
-      return;
     }
-
-    setLoading(true);
-    User user = User(
-        nameController.text, emailController.text, passwordController.text);
-    Database()
-        .registerUser(user)
-        .then((result) => handleRegisterResult(result));
   }
 
   Future<void> createDialog(String title, String content) async {
@@ -93,10 +48,7 @@ class SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    nameController.dispose();
-    confirmPasswordController.dispose();
+    viewModel.dispose();
     super.dispose();
   }
 
@@ -115,67 +67,75 @@ class SignUpScreenState extends State<SignUpScreen> {
         padding: const EdgeInsets.only(
             left: 20.0, right: 20.0, bottom: 20.0, top: 20.0),
         color: screenBackgroundColor,
-        child: Stack(children: [
-          Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextField(
-                    controller: nameController,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                        labelStyle: TextStyle(color: Colors.white),
-                        border: OutlineInputBorder(),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white)),
-                        labelText: 'Nome')),
-                const Padding(padding: EdgeInsets.all(10.0)),
-                TextField(
-                    controller: emailController,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                        labelStyle: TextStyle(color: Colors.white),
-                        border: OutlineInputBorder(),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white)),
-                        labelText: 'Email')),
-                const Padding(padding: EdgeInsets.all(10.0)),
-                TextField(
-                    controller: passwordController,
-                    obscureText: true,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                        labelStyle: TextStyle(color: Colors.white),
-                        border: OutlineInputBorder(),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white)),
-                        labelText: 'Senha')),
-                const Padding(padding: EdgeInsets.all(10.0)),
-                TextField(
-                    controller: confirmPasswordController,
-                    obscureText: true,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                        labelStyle: TextStyle(color: Colors.white),
-                        border: OutlineInputBorder(),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white)),
-                        labelText: 'Confirmarção da Senha')),
-                const Spacer(),
-                ElevatedButton(
-                  style: const ButtonStyle(
-                      minimumSize:
-                          MaterialStatePropertyAll(Size.fromHeight(50.0))),
-                  onPressed: () => {signUp()},
-                  child: const Text("Cadastrar"),
-                )
-              ]),
-          if (loading)
-            const Opacity(
-                opacity: 0.0,
-                child: ModalBarrier(dismissible: false, color: Colors.black)),
-          if (loading) const Center(child: CircularProgressIndicator()),
-        ]),
+        child: ListenableBuilder(
+          listenable: viewModel.loading,
+          builder: (context, child) => Stack(children: [
+            Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextField(
+                      controller: viewModel.nameController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                          labelStyle: TextStyle(color: Colors.white),
+                          border: OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white)),
+                          labelText: 'Nome')),
+                  const Padding(padding: EdgeInsets.all(10.0)),
+                  TextField(
+                      controller: viewModel.emailController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                          labelStyle: TextStyle(color: Colors.white),
+                          border: OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white)),
+                          labelText: 'Email')),
+                  const Padding(padding: EdgeInsets.all(10.0)),
+                  TextField(
+                      controller: viewModel.passwordController,
+                      obscureText: true,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                          labelStyle: TextStyle(color: Colors.white),
+                          border: OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white)),
+                          labelText: 'Senha')),
+                  const Padding(padding: EdgeInsets.all(10.0)),
+                  TextField(
+                      controller: viewModel.confirmPasswordController,
+                      obscureText: true,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                          labelStyle: TextStyle(color: Colors.white),
+                          border: OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white)),
+                          labelText: 'Confirmarção da Senha')),
+                  const Spacer(),
+                  ElevatedButton(
+                    style: const ButtonStyle(
+                        minimumSize:
+                            MaterialStatePropertyAll(Size.fromHeight(50.0))),
+                    onPressed: () {
+                      viewModel
+                          .signUp()
+                          .then((result) => handleRegisterResult(result));
+                    },
+                    child: const Text("Cadastrar"),
+                  )
+                ]),
+            if (viewModel.loading.value)
+              const Opacity(
+                  opacity: 0.0,
+                  child: ModalBarrier(dismissible: false, color: Colors.black)),
+            if (viewModel.loading.value)
+              const Center(child: CircularProgressIndicator()),
+          ]),
+        ),
       ),
     );
   }
