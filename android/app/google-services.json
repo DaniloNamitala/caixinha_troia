@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "140660325207",
+    "firebase_url": "https://caixinha-troia-default-rtdb.firebaseio.com",
+    "project_id": "caixinha-troia",
+    "storage_bucket": "caixinha-troia.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:140660325207:android:e71953c971d9240ad95c12",
+        "android_client_info": {
+          "package_name": "com.toria.caixinha_troia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "140660325207-ql5koc86f536ar71rkupt7dh2mudnab6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwcCvxZjFMd8f1REUkDxX43Ik_MgOGZ_c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "140660325207-ql5koc86f536ar71rkupt7dh2mudnab6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
