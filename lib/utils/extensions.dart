@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import 'package:flutter/widgets.dart';
 
 extension StringClear on String {
   // remove '.', '#', '$', '[', or ']'
@@ -30,5 +31,12 @@ extension Encrypt on String {
     final bytes = utf8.encode(this);
     final hash = sha256.convert(bytes);
     return hash.toString();
+  }
+}
+
+extension Notifier on ValueNotifier {
+  ListenableBuilder listen(Widget Function(dynamic) builder) {
+    return ListenableBuilder(
+        listenable: this, builder: (context, widget) => builder(value));
   }
 }

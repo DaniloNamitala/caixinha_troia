@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 class ViewModelSignUp {
   final repository = SignRepository();
   final ValueNotifier<bool> loading = ValueNotifier(false);
-  final ValueNotifier<bool> hidePassword = ValueNotifier(true);
-  final ValueNotifier<bool> hideConfirmation = ValueNotifier(true);
   final emailController = TextEditingController();
   final nameController = TextEditingController();
   final passwordController = TextEditingController();
@@ -25,11 +23,11 @@ class ViewModelSignUp {
   Pair<bool, String> validadeData(
       String email, String name, String pass, String confirmation) {
     if (name.isEmpty) {
-      return Pair(false, "Nome não pode ser vazio!!");
+      return Pair(false, "Nome não pode ser vazio!");
     } else if (email.invalidEmail()) {
-      return Pair(false, "Email inválido ou não institucional!!");
+      return Pair(false, "Email inválido ou não institucional!");
     } else if (pass != confirmation || pass.isEmpty || confirmation.isEmpty) {
-      return Pair(false, "Senhas inválidas ou diferentes!!");
+      return Pair(false, "Senhas inválidas ou diferentes!");
     }
     return Pair(true, "");
   }

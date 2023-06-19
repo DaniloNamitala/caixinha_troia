@@ -1,5 +1,9 @@
 import 'package:caixinha_troia/feature_sign/screens/signup_screen.dart';
 import 'package:caixinha_troia/feature_sign/viewmodel/login_viewmodel.dart';
+import 'package:caixinha_troia/feature_sign/widgets/primary_button.dart';
+import 'package:caixinha_troia/feature_sign/widgets/secondary_button.dart';
+import 'package:caixinha_troia/widgets/input.dart';
+import 'package:caixinha_troia/feature_sign/widgets/labeled_checkbox.dart';
 import 'package:caixinha_troia/style/colors.dart';
 import 'package:caixinha_troia/utils/dialog.dart';
 import 'package:caixinha_troia/utils/pair.dart';
@@ -43,76 +47,31 @@ class _LoginScreenState extends State<LoginScreen> {
                 scale: 0.7,
               ),
               const Spacer(flex: 1),
-              TextField(
-                  controller: viewModel.emailController,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: const InputDecoration(
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: OutlineInputBorder(),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white)),
-                      labelText: 'Email')),
+              Input("Email", viewModel.emailController),
               const Padding(padding: EdgeInsets.all(10.0)),
-              ListenableBuilder(
-                listenable: viewModel.hidePassword,
-                builder: (context, widget) => TextField(
-                    obscureText: viewModel.hidePassword.value,
-                    controller: viewModel.passwordController,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                        labelStyle: const TextStyle(color: Colors.white),
-                        border: const OutlineInputBorder(),
-                        enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white)),
-                        labelText: 'Senha',
-                        suffixIcon: IconButton(
-                          color: Colors.white,
-                          onPressed: () {
-                            viewModel.hidePassword.value =
-                                !viewModel.hidePassword.value;
-                          },
-                          icon: Icon(viewModel.hidePassword.value
-                              ? Icons.visibility_off
-                              : Icons.visibility),
-                        ))),
+              Input(
+                "Senha",
+                viewModel.passwordController,
+                isPassword: true,
               ),
-              Row(
-                children: [
-                  ListenableBuilder(
-                      listenable: viewModel.saveLogin,
-                      builder: (context, child) => Checkbox(
-                          value: viewModel.saveLogin.value,
-                          onChanged: (value) {
-                            viewModel.saveLogin.value = value == true;
-                          })),
-                  const Text(
-                    "Me mantenha conectado",
-                    style: TextStyle(color: Colors.white),
-                  )
-                ],
+              LabeledCheckbox(
+                "Mantenha-me Conecato",
+                onChange: (value) {
+                  viewModel.saveLogin = value;
+                },
               ),
               const Spacer(flex: 4),
-              TextButton(
-                  onPressed: () => {
+              SecondaryButton("Cadastrar",
+                  onPress: () => {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => const SignUpScreen()))
-                      },
-                  style: const ButtonStyle(
-                      minimumSize:
-                          MaterialStatePropertyAll(Size.fromHeight(50.0))),
-                  child: const Text("Cadastrar")),
+                      }),
               const Padding(padding: EdgeInsets.all(5.0)),
-              ElevatedButton(
-                style: const ButtonStyle(
-                    minimumSize:
-                        MaterialStatePropertyAll(Size.fromHeight(50.0))),
-                onPressed: () {
-                  viewModel.login().then((value) => handleLoginResult(value));
-                },
-                child: const Text("Entrar"),
-              )
+              PrimaryButton("Entrar", onPress: () {
+                viewModel.login().then((value) => handleLoginResult(value));
+              })
             ]),
       ),
     );

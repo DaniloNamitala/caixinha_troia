@@ -1,6 +1,8 @@
 import 'package:caixinha_troia/feature_sign/viewmodel/signup_viewmodel.dart';
+import 'package:caixinha_troia/widgets/input.dart';
 import 'package:caixinha_troia/style/colors.dart';
 import 'package:caixinha_troia/utils/dialog.dart';
+import 'package:caixinha_troia/utils/extensions.dart';
 import 'package:caixinha_troia/utils/pair.dart';
 import 'package:flutter/material.dart';
 
@@ -44,81 +46,27 @@ class SignUpScreenState extends State<SignUpScreen> {
         padding: const EdgeInsets.only(
             left: 20.0, right: 20.0, bottom: 20.0, top: 20.0),
         color: screenBackgroundColor,
-        child: ListenableBuilder(
-          listenable: viewModel.loading,
-          builder: (context, child) => Stack(children: [
+        child: viewModel.loading.listen(
+          (loading) => Stack(children: [
             Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextField(
-                      controller: viewModel.nameController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                          labelStyle: TextStyle(color: Colors.white),
-                          border: OutlineInputBorder(),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white)),
-                          labelText: 'Nome')),
+                  Input("Nome", viewModel.nameController),
                   const Padding(padding: EdgeInsets.all(10.0)),
-                  TextField(
-                      controller: viewModel.emailController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                          labelStyle: TextStyle(color: Colors.white),
-                          border: OutlineInputBorder(),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white)),
-                          labelText: 'Email')),
+                  Input("Email", viewModel.emailController),
                   const Padding(padding: EdgeInsets.all(10.0)),
-                  ListenableBuilder(
-                      listenable: viewModel.hidePassword,
-                      builder: (context, widget) => TextField(
-                            controller: viewModel.passwordController,
-                            obscureText: viewModel.hidePassword.value,
-                            style: const TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
-                                suffixIcon: IconButton(
-                                  color: Colors.white,
-                                  onPressed: () {
-                                    viewModel.hidePassword.value =
-                                        !viewModel.hidePassword.value;
-                                  },
-                                  icon: Icon(viewModel.hidePassword.value
-                                      ? Icons.visibility_off
-                                      : Icons.visibility),
-                                ),
-                                labelStyle:
-                                    const TextStyle(color: Colors.white),
-                                border: const OutlineInputBorder(),
-                                enabledBorder: const OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.white)),
-                                labelText: 'Senha'),
-                          )),
+                  Input(
+                    "Senha",
+                    viewModel.passwordController,
+                    isPassword: true,
+                  ),
                   const Padding(padding: EdgeInsets.all(10.0)),
-                  ListenableBuilder(
-                      listenable: viewModel.hideConfirmation,
-                      builder: (context, widget) => TextField(
-                          controller: viewModel.confirmPasswordController,
-                          obscureText: viewModel.hideConfirmation.value,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                              suffixIcon: IconButton(
-                                color: Colors.white,
-                                onPressed: () {
-                                  viewModel.hideConfirmation.value =
-                                      !viewModel.hideConfirmation.value;
-                                },
-                                icon: Icon(viewModel.hideConfirmation.value
-                                    ? Icons.visibility_off
-                                    : Icons.visibility),
-                              ),
-                              labelStyle: const TextStyle(color: Colors.white),
-                              border: const OutlineInputBorder(),
-                              enabledBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white)),
-                              labelText: 'Confirmarção da Senha'))),
+                  Input(
+                    "Confirmação da Senha",
+                    viewModel.confirmPasswordController,
+                    isPassword: true,
+                  ),
                   const Spacer(),
                   ElevatedButton(
                     style: const ButtonStyle(
@@ -132,12 +80,11 @@ class SignUpScreenState extends State<SignUpScreen> {
                     child: const Text("Cadastrar"),
                   )
                 ]),
-            if (viewModel.loading.value)
+            if (loading)
               const Opacity(
                   opacity: 0.0,
                   child: ModalBarrier(dismissible: false, color: Colors.black)),
-            if (viewModel.loading.value)
-              const Center(child: CircularProgressIndicator()),
+            if (loading) const Center(child: CircularProgressIndicator()),
           ]),
         ),
       ),

@@ -1,6 +1,5 @@
 import 'package:caixinha_troia/model/user.dart';
 import 'package:caixinha_troia/utils/extensions.dart';
-import 'package:caixinha_troia/utils/pair.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class Database {

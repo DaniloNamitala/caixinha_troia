@@ -12,9 +12,9 @@ class SignRepository {
     var u = await _database.getUser(user.email);
     if (u == null) {
       await _database.insertUser(user);
-      return Pair(true, "Usuário cadastrado com sucesso!!");
+      return Pair(true, "Usuário cadastrado com sucesso!");
     }
-    return Pair(false, "Email já cadastrado!!");
+    return Pair(false, "Email já cadastrado!");
   }
 
   Future<User?> getUser(String email) => _database.getUser(email);
