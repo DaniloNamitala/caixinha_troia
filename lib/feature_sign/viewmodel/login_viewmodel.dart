@@ -1,4 +1,5 @@
 import 'package:caixinha_troia/feature_sign/repository/sign_repository.dart';
+import 'package:caixinha_troia/repository/client_repository.dart';
 import 'package:caixinha_troia/utils/extensions.dart';
 import 'package:caixinha_troia/utils/pair.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,8 @@ class ViewModelLogin {
     serverPassword = await repository.getPassword(email);
 
     if (password == serverPassword) {
+      var user = await repository.getUser(email);
+      ClientRepository().setUser(user);
       return Pair(true, "Login realizado com sucesso.");
     }
 

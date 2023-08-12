@@ -26,6 +26,17 @@ extension StringClear on String {
   }
 }
 
+extension UserUtils on String {
+  String initials() {
+    var names = split(" ");
+    if (names.length > 1) {
+      return "${names[0][0]}${names[1][0]}";
+    } else {
+      return names[0][0];
+    }
+  }
+}
+
 extension Encrypt on String {
   String encrypted() {
     final bytes = utf8.encode(this);

@@ -27,6 +27,6 @@ class Cart {
   }
 
   Map<String, dynamic> toMap() {
-    return {'products': 'null'};
+    return {'products': products.map((e) => e.toMap())};
   }
 }

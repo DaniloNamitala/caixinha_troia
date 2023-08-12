@@ -1,0 +1,10 @@
+{
+  "name": "Danilo",
+  "password": "password",
+  "email": "example@mail.com",
+  "cart": "OBJECT cart",
+  "role": "GOD",
+  "history": [
+    "OBJECT history_item"
+  ]
+}

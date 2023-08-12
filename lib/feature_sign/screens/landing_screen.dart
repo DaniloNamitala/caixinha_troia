@@ -1,4 +1,5 @@
 import 'package:caixinha_troia/feature_sign/viewmodel/login_viewmodel.dart';
+import 'package:caixinha_troia/repository/client_repository.dart';
 import 'package:caixinha_troia/style/colors.dart';
 import 'package:flutter/material.dart';
 
